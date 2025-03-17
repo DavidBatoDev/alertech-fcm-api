@@ -21,12 +21,22 @@ app.get('/', (req, res) => {
 
 // Send Notification to a Topic
 app.post('/sendTopicNotification', async (req, res) => {
+  // You can send these values in the request body, or use defaults.
+  const {
+    title = 'Fire Detected!',
+    body = 'Fire Detected in PUP Sta. Mesa Room 101',
+    sound_type = 'alarm_sound',  // Should match a file in res/raw (e.g., alarm_sound.mp3)
+    imageUrl = ''
+  } = req.body;
+
   const message = {
     topic: 'all',
     data: {
       type: 'alarm',
-      title: 'Fire Detected!',
-      body: 'Fire Detected in PUP Sta. Mesa Room 101',
+      title: title,
+      body: body,
+      sound_type: sound_type,
+      imageUrl: imageUrl
     },
     android: {
       priority: 'high'
@@ -42,9 +52,16 @@ app.post('/sendTopicNotification', async (req, res) => {
   }
 });
 
-// Send Notification to Specific Device
+// Send Notification to Specific Device (by topic for now)
 app.post('/sendDeviceNotification', async (req, res) => {
-  const { topic, title, body } = req.body;
+  // Expecting topic, title, body, sound_type, imageUrl in request body.
+  const {
+    topic,
+    title = 'Fire Detected!',
+    body = 'Fire Detected in PUP Sta. Mesa Room 101',
+    sound_type = 'alarm_sound',
+    imageUrl = ''
+  } = req.body;
 
   if (!topic) {
     return res.status(400).json({ error: 'topic is required!' });
@@ -56,6 +73,8 @@ app.post('/sendDeviceNotification', async (req, res) => {
       type: 'alarm',
       title: title,
       body: body,
+      sound_type: sound_type,
+      imageUrl: imageUrl
     },
     android: {
       priority: 'high'
@@ -66,8 +85,8 @@ app.post('/sendDeviceNotification', async (req, res) => {
     const response = await admin.messaging().send(message);
     res.json({ success: true, response });
   } catch (err) {
-    console.error('Error sending topic notification:', err);
-    res.status(500).json({ error: 'Failed to send topic notification' });
+    console.error('Error sending device notification:', err);
+    res.status(500).json({ error: 'Failed to send device notification' });
   }
 });
 
