@@ -3,13 +3,11 @@ const admin = require('firebase-admin');
 const app = express();
 app.use(express.json());  // For parsing JSON requests
 
-
-// // Load Service Account from Vercel Environment Variables
+// Load Service Account from Vercel Environment Variables
 const serviceAccountBase64 = process.env.FIREBASE_CREDENTIALS;
 const serviceAccount = JSON.parse(Buffer.from(serviceAccountBase64, 'base64').toString('utf-8'));
 
 // Initialize Firebase Admin SDK
-const serviceAccount = require('../serviceAccountKey.json');
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
