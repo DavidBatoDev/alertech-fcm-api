@@ -51,11 +51,11 @@ app.post('/sendDeviceNotification', async (req, res) => {
   }
 
   const message = {
-    topic: 'alertech-arduino-day-demo',
+    topic: topic,
     data: {
       type: 'alarm',
-      title: 'Temperature Rising!',
-      body: 'Temperature is above 50°C in STI-Cubao Venue',
+      title: title,
+      body: body,
     },
     android: {
       priority: 'high'
