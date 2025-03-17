@@ -44,20 +44,18 @@ app.post('/sendTopicNotification', async (req, res) => {
 
 // Send Notification to Specific Device
 app.post('/sendDeviceNotification', async (req, res) => {
-  const { fcmToken, title, body } = req.body;
+  const { topic, title, body } = req.body;
 
-  if (!fcmToken) {
-    return res.status(400).json({ error: 'FCM token is required!' });
+  if (!topic) {
+    return res.status(400).json({ error: 'topic is required!' });
   }
 
   const message = {
-    token: fcmToken,
+    topic: 'alertech-arduino-day-demo',
     data: {
       type: 'alarm',
-      title: title || 'Test Alarm',
-      body: body || 'This is a test alarm via FCM',
-      channel_id: 'alarm_channel',
-      sound: 'alarm_sound'
+      title: 'Temperature Rising!',
+      body: 'Temperature is above 50°C in STI-Cubao Venue',
     },
     android: {
       priority: 'high'
@@ -68,8 +66,8 @@ app.post('/sendDeviceNotification', async (req, res) => {
     const response = await admin.messaging().send(message);
     res.json({ success: true, response });
   } catch (err) {
-    console.error('Error sending device notification:', err);
-    res.status(500).json({ error: 'Failed to send device notification' });
+    console.error('Error sending topic notification:', err);
+    res.status(500).json({ error: 'Failed to send topic notification' });
   }
 });
 
